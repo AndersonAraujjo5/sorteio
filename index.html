@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio Aleatório</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+    </style>
+    <div class="container">
+        <h1>Sorteio Aleatório</h1>
+        <input type="file" id="fileInput" accept=".csv">
+        <button id="drawButton" disabled>Sorteio</button>
+        <div id="result" class="result"></div>
+    </div>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+document.getElementById('drawButton').addEventListener('click', drawWinner);
+
+let participants = [];
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file && file.type === "text/csv") {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            parseCSV(text);
+        };
+        reader.readAsText(file);
+        document.getElementById('drawButton').disabled = false;
+    } else {
+        alert("Por favor, selecione um arquivo CSV válido.");
+    }
+}
+
+function parseCSV(data) {
+    const lines = data.split('\n');
+    participants = lines.map(line => {
+        const [name, number] = line.split(',');
+        return { name: name.trim(), number: number.trim() };
+    }).filter(participant => participant.name && participant.number);
+}
+
+function drawWinner() {
+    if (participants.length === 0) {
+        alert("Nenhum participante disponível para o sorteio.");
+        return;
+    }
+    const winnerIndex = Math.floor(Math.random() * participants.length);
+    const winner = participants[winnerIndex];
+    document.getElementById('result').innerText = `Ganhador: ${winner.name} - Número: ${winner.number}`;
+}
+    </script>
+</body>
+</html>
