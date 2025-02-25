@@ -1,5 +1,5 @@
 import os from 'os';
-import app from './app.js';
+import app from './src/app.js';
 
 
 // Função para obter o endereço IP local
